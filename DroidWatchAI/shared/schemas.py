@@ -1,3 +1,4 @@
+# OWNER: ALL
 # shared/schemas.py
 # ─────────────────────────────────────────────────────────────
 # DroidWatch AI — Shared Schemas & Constants

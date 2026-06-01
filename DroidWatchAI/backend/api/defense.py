@@ -1,3 +1,4 @@
+# OWNER: Gahan
 # backend/api/defense.py
 # ─────────────────────────────────────────────────────────────
 # DroidWatch AI — Defense Simulation Endpoints

@@ -1,3 +1,4 @@
+# OWNER: Rajath
 class AISummaryGenerator:
     """
     Generates a natural language executive summary explaining threat analysis findings.

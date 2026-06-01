@@ -1,3 +1,4 @@
+# OWNER: Gahan
 # sandbox/adb/adb_controller.py
 # ─────────────────────────────────────────────────────────────
 # DroidWatch AI — ADB Controller

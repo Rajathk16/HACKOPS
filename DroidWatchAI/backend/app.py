@@ -1,3 +1,4 @@
+# OWNER: Gahan
 # backend/app.py
 # ─────────────────────────────────────────────────────────────
 # DroidWatch AI — Main Backend Server

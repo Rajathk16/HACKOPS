@@ -1,3 +1,4 @@
+# OWNER: Gahan
 # backend/core/event_manager.py
 # ─────────────────────────────────────────────────────────────
 # DroidWatch AI — Event Manager
