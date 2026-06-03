@@ -1,17 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --bg-base: #050b14;
+  --bg-surface: #0d1926;
+  --bg-surface-2: #0f2035;
+  --border-default: #1a3a5c;
+  --border-active: #00c8ff;
+  --accent-cyan: #00c8ff;
+  --accent-red: #ff3d3d;
+  --accent-amber: #ff9a00;
+  --accent-green: #00e676;
+  --text-primary: #e8f4fd;
+  --text-secondary: #6b9ab8;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 2px; }
+
+.card {
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.card:hover { border-color: var(--border-active); }
+
+.card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-display { font-family: 'Orbitron', sans-serif; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+.pulse { animation: pulse-dot 2s ease-in-out infinite; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeInUp 0.4s ease forwards; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.blink { animation: blink 1s step-end infinite; }
+
+.glow-cyan { box-shadow: 0 0 12px rgba(0, 200, 255, 0.15); }
+.glow-red { box-shadow: 0 0 12px rgba(255, 61, 61, 0.2); }
+.glow-green { box-shadow: 0 0 12px rgba(0, 230, 118, 0.15); }
+
+.status-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid;
 }
