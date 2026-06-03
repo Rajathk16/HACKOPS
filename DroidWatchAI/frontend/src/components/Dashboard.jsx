@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AttackTimeline from './AttackTimeline';
 import ThreatMeter from './ThreatMeter';
 import C2Graph from './C2Graph';
@@ -7,6 +7,44 @@ import DefensePanel from './DefensePanel';
 import AIPanel from './AIPanel';
 
 function Dashboard() {
+  const [report, setReport] = useState(null);
+  const [eventsData, setEventsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [summaryRes, eventsRes] = await Promise.all([
+          fetch('http://localhost:5000/api/threats/demo/summary'),
+          fetch('http://localhost:5000/api/threats/demo')
+        ]);
+        
+        const summaryData = await summaryRes.json();
+        const eventsData = await eventsRes.json();
+        
+        setReport(summaryData);
+        setEventsData(eventsData);
+      } catch (err) {
+        console.error("Failed to fetch backend data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: '#00c8ff' }} className="font-mono">
+        <span className="blink" style={{ marginRight: '8px' }}>▌</span> INITIALIZING AI ENGINE...
+      </div>
+    );
+  }
+
+  const eventCount = eventsData ? eventsData.count : 0;
+  const threatCount = report && report.mitre_techniques ? report.mitre_techniques.length : 0;
+
   return (
     <div style={{ padding: '20px', maxWidth: '1600px', margin: '0 auto' }}>
 
@@ -27,9 +65,9 @@ function Dashboard() {
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           {[
-            { label: 'EVENTS', value: '247', color: '#ff3d3d' },
-            { label: 'THREATS', value: '12', color: '#ff9a00' },
-            { label: 'BLOCKED', value: '8', color: '#00e676' },
+            { label: 'EVENTS', value: eventCount, color: '#ff3d3d' },
+            { label: 'THREATS', value: threatCount, color: '#ff9a00' },
+            { label: 'BLOCKED', value: '0', color: '#00e676' },
           ].map(stat => (
             <div key={stat.label} style={{
               padding: '8px 16px',
@@ -48,20 +86,20 @@ function Dashboard() {
 
       {/* Grid Row 1 */}
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px', marginBottom: '16px' }}>
-        <AttackTimeline />
-        <ThreatMeter />
+        <AttackTimeline eventsData={eventsData} />
+        <ThreatMeter report={report} />
       </div>
 
       {/* Grid Row 2 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-        <C2Graph />
-        <LayerStatus />
+        <C2Graph eventsData={eventsData} />
+        <LayerStatus report={report} eventsData={eventsData} />
       </div>
 
       {/* Grid Row 3 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <DefensePanel />
-        <AIPanel />
+        <DefensePanel report={report} />
+        <AIPanel report={report} />
       </div>
 
     </div>

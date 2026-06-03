@@ -1,6 +1,10 @@
 # OWNER: Rajath
-import numpy as np
-from sklearn.tree import DecisionTreeClassifier
+try:
+    import numpy as np
+    from sklearn.tree import DecisionTreeClassifier
+    HAS_SKLEARN = True
+except ImportError:
+    HAS_SKLEARN = False
 
 # Severity levels mapping
 SEVERITY_LEVELS = ["INFORMATIONAL", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
@@ -44,14 +48,20 @@ TRAINING_DATA = [
 
 class SeverityPredictor:
     def __init__(self):
-        self.model = DecisionTreeClassifier(max_depth=4, random_state=42)
         self.is_trained = False
-        self.train()
+        if HAS_SKLEARN:
+            self.model = DecisionTreeClassifier(max_depth=4, random_state=42)
+            self.train()
+        else:
+            self.model = None
 
     def train(self) -> None:
         """
         Trains the DecisionTree model on severity rules.
         """
+        if not HAS_SKLEARN:
+            return
+            
         X = []
         y = []
         for features, label in TRAINING_DATA:

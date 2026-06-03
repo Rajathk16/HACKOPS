@@ -4,8 +4,9 @@ import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip);
 
-function ThreatMeter() {
-  const level = 78;
+function ThreatMeter({ report }) {
+  const level = report ? Math.round(report.total_score) : 0;
+  const riskLevel = report ? report.threat_level : 'LOW';
 
   const data = {
     datasets: [{
@@ -53,9 +54,9 @@ function ThreatMeter() {
 
         <div style={{ width: '100%', marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {[
-            { label: 'Network Exposure', value: 85, color: '#ff3d3d' },
-            { label: 'Data Risk', value: 62, color: '#ff9a00' },
-            { label: 'System Integrity', value: 40, color: '#ffd600' },
+            { label: 'Network Risk', value: report ? Math.round(report.layer_breakdown.network) : 0, color: '#ff3d3d' },
+            { label: 'File System Risk', value: report ? Math.round(report.layer_breakdown.filesystem) : 0, color: '#ff9a00' },
+            { label: 'System Integrity', value: report ? Math.round(report.layer_breakdown.system) : 0, color: '#ffd600' },
           ].map(item => (
             <div key={item.label}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>

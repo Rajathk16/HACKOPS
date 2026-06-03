@@ -1,7 +1,11 @@
 # OWNER: Rajath
 import re
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+try:
+    import numpy as np
+    from sklearn.ensemble import RandomForestClassifier
+    HAS_SKLEARN = True
+except ImportError:
+    HAS_SKLEARN = False
 
 # Standard categories
 CATEGORIES = ["Benign", "Spyware", "Trojan", "Adware", "Ransomware", "Worm"]
@@ -61,9 +65,12 @@ SYNTHETIC_DATA = [
 
 class ThreatClassifier:
     def __init__(self):
-        self.model = RandomForestClassifier(n_estimators=50, random_state=42)
         self.is_trained = False
-        self.train()
+        if HAS_SKLEARN:
+            self.model = RandomForestClassifier(n_estimators=50, random_state=42)
+            self.train()
+        else:
+            self.model = None
 
     def _extract_features(self, events: list[dict]) -> list:
         """
@@ -134,6 +141,9 @@ class ThreatClassifier:
         """
         Trains the RandomForest model on synthetic profile data.
         """
+        if not HAS_SKLEARN:
+            return
+            
         X = []
         y = []
         for features, label in SYNTHETIC_DATA:

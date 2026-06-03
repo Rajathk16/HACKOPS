@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 
-const findings = [
-  { label: 'Classification', value: 'SPYWARE / RAT', color: '#ff3d3d' },
-  { label: 'Confidence', value: '94.2%', color: '#ff9a00' },
-  { label: 'Family', value: 'AndroRAT Variant', color: '#ff9a00' },
-  { label: 'Risk Score', value: '78 / 100', color: '#ff3d3d' },
-];
-
-const recommendations = [
-  'Isolate device from all network interfaces immediately',
-  'Revoke SMS and storage permissions from the APK',
-  'Blacklist C2 server IPs at the firewall level',
-  'Quarantine payload files found in /data directory',
-  'Enable full packet capture for forensic analysis',
-];
-
-function AIPanel() {
+function AIPanel({ report }) {
   const [expanded, setExpanded] = useState(false);
+
+  // Fallbacks if report is null
+  const classification = report ? report.malware_type : 'UNKNOWN';
+  const confidence = report && report.confidence ? (report.confidence * 100).toFixed(1) + '%' : 'N/A';
+  const riskScore = report ? report.total_score : 0;
+  
+  const findings = [
+    { label: 'Classification', value: classification.toUpperCase(), color: '#ff3d3d' },
+    { label: 'Confidence', value: confidence, color: '#ff9a00' },
+    { label: 'Family', value: 'Auto-Detected', color: '#ff9a00' },
+    { label: 'Risk Score', value: `${riskScore} / 100`, color: '#ff3d3d' },
+  ];
+
+  const recommendations = report && report.mitigations ? report.mitigations : [];
+  const aiSummary = report ? report.ai_summary : "Waiting for analysis...";
 
   return (
     <div className="card" style={{ padding: '20px' }}>
@@ -41,13 +41,8 @@ function AIPanel() {
         padding: '12px',
         marginBottom: '14px',
       }}>
-        <div className="font-mono" style={{ fontSize: '0.68rem', color: '#6b9ab8', lineHeight: '1.7' }}>
-          "The APK exhibits multi-layer attack behavior including{' '}
-          <span style={{ color: '#ff3d3d' }}>C2 callbacks</span>,{' '}
-          <span style={{ color: '#ff9a00' }}>covert file persistence</span>, and{' '}
-          <span style={{ color: '#ff3d3d' }}>SMS interception</span>. Communication patterns
-          indicate remote access trojan behavior with encrypted exfiltration channels.
-          Immediate containment is advised."
+        <div className="font-mono" style={{ fontSize: '0.68rem', color: '#6b9ab8', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
+          {aiSummary}
         </div>
       </div>
 

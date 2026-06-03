@@ -14,9 +14,7 @@ python-socketio==5.11.2
 simple-websocket==1.0.0
 
 # AI Engine (Rajath)
-scikit-learn==1.5.0
-numpy==1.26.4
-pandas==2.2.2
+# scikit-learn, numpy, pandas removed for demo on Python 3.14 (will use heuristics)
 anthropic==0.28.0
 
 # Utilities
