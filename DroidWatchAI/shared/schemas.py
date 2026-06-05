@@ -1,16 +1,16 @@
-# OWNER: ALL
-# shared/schemas.py
-# ─────────────────────────────────────────────────────────────
-# DroidWatch AI — Shared Schemas & Constants
-# ALL team members import from here. Do not hardcode these values.
-# ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
 
 from dataclasses import dataclass, field
 from typing import Optional, Any
 from datetime import datetime
 import uuid
 
-# ── Severity Levels ──────────────────────────────────────────
+
 class Severity:
     CRITICAL = "critical"
     HIGH     = "high"
@@ -26,35 +26,35 @@ SEVERITY_SCORE = {
     Severity.INFO:       5,
 }
 
-# ── Security Layers ───────────────────────────────────────────
+
 class Layer:
     NETWORK    = "network"
     FILESYSTEM = "filesystem"
     SYSTEM     = "system"
 
-# ── Event Types by Layer ──────────────────────────────────────
+
 class EventType:
-    # Network
+    
     C2_CALLBACK   = "c2_callback"
     DNS_ABUSE     = "dns_abuse"
     BEACONING     = "beaconing"
     SUSPICIOUS_IP = "suspicious_ip"
     TRAFFIC_SPIKE = "traffic_spike"
 
-    # Filesystem
+    
     HIDDEN_FILE       = "hidden_file_creation"
     PAYLOAD_DROP      = "payload_drop"
     PERSISTENCE_FILE  = "persistence_mechanism"
     STORAGE_ABUSE     = "storage_abuse"
 
-    # System
+    
     PERMISSION_ABUSE  = "permission_abuse"
     BACKGROUND_SVC    = "background_service"
     SMS_INTERCEPT     = "sms_intercept"
     ACCESSIBILITY     = "accessibility_abuse"
     PRIVILEGE_ESC     = "privilege_escalation"
 
-# ── Defense Action Types ──────────────────────────────────────
+
 class DefenseAction:
     BLOCK_IP         = "block_ip"
     QUARANTINE_FILE  = "quarantine_file"
@@ -63,7 +63,7 @@ class DefenseAction:
     ISOLATE_NETWORK  = "isolate_network"
     TERMINATE_SERVICE = "terminate_service"
 
-# ── WebSocket Event Names ─────────────────────────────────────
+
 class WSEvents:
     NEW_THREAT      = "new_threat"
     DEFENSE_TRIGGER = "defense_trigger"
@@ -72,7 +72,7 @@ class WSEvents:
     THREAT_SUMMARY  = "threat_summary"
     ERROR           = "error"
 
-# ── Data Classes (used by backend + AI engine) ────────────────
+
 @dataclass
 class ThreatEvent:
     layer:       str

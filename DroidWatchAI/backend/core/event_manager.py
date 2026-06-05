@@ -1,12 +1,12 @@
-# OWNER: Gahan
-# backend/core/event_manager.py
-# ─────────────────────────────────────────────────────────────
-# DroidWatch AI — Event Manager
-# Owner: Gahan Shetty
-#
-# Central hub: receives events from sandbox/network/ai modules
-# and broadcasts them over WebSocket to the frontend.
-# ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
 
 import json
 from flask_socketio import SocketIO
@@ -19,9 +19,9 @@ logger = get_logger("event_manager")
 class EventManager:
     def __init__(self, socketio: SocketIO):
         self.socketio = socketio
-        self._event_store: dict[str, list] = {}  # scan_id → [events]
+        self._event_store: dict[str, list] = {}  
 
-    # ── Emit a threat event ───────────────────────────────────
+    
     def emit_threat(self, scan_id: str, event: ThreatEvent):
         """
         Called by sandbox/logcat reader when a new threat is detected.
@@ -40,7 +40,7 @@ class EventManager:
             "event": event_dict
         })
 
-    # ── Emit a defense action ─────────────────────────────────
+    
     def emit_defense(self, scan_id: str, defense_event: dict):
         """
         Called when a defense action is triggered.
@@ -52,7 +52,7 @@ class EventManager:
             "defense": defense_event
         })
 
-    # ── Emit scan lifecycle events ────────────────────────────
+    
     def emit_scan_started(self, scan_id: str, apk_name: str):
         self.socketio.emit(WSEvents.SCAN_STARTED, {
             "scan_id": scan_id,
@@ -66,7 +66,7 @@ class EventManager:
             "summary": summary
         })
 
-    # ── Emit AI summary ───────────────────────────────────────
+    
     def emit_ai_summary(self, scan_id: str, summary: dict):
         """
         Called by Rajath's AI engine once threat scoring is done.
@@ -77,7 +77,7 @@ class EventManager:
             "summary": summary
         })
 
-    # ── Replay mode (for demo without live sandbox) ───────────
+    
     def replay_sample_events(self, scan_id: str, events_path: str, delay_ms: int = 800):
         """
         Reads sample_events.json and emits each event with a delay.
@@ -100,7 +100,7 @@ class EventManager:
                     "event": raw_event
                 })
 
-            # Emit a canned summary at the end
+            
             self.socketio.emit(WSEvents.SCAN_COMPLETE, {
                 "scan_id": scan_id,
                 "summary": {
@@ -114,6 +114,6 @@ class EventManager:
         thread = threading.Thread(target=_replay, daemon=True)
         thread.start()
 
-    # ── Getters ───────────────────────────────────────────────
+    
     def get_events(self, scan_id: str) -> list:
         return self._event_store.get(scan_id, [])

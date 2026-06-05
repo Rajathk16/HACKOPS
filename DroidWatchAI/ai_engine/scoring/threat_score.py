@@ -1,4 +1,4 @@
-# OWNER: Rajath
+
 class ThreatScoreCalculator:
     """
     Computes numerical threat scores based on behaviors, layer events, and severity indicators.
@@ -26,29 +26,29 @@ class ThreatScoreCalculator:
                 "indicators_triggered": 0
             }
 
-        # Initialize raw scores for each layer
+        
         net_raw = 0.0
         fs_raw = 0.0
         sys_raw = 0.0
         indicators_triggered = 0
 
-        # Network layer analysis
+        
         unique_ips = set()
         has_dns_abuse = False
         has_c2 = False
         
-        # File system layer analysis
+        
         has_hidden_file = False
         has_payload_drop = False
         has_persistence_file = False
         
-        # System layer analysis
+        
         has_sms_intercept = False
         has_sms_permission = False
         has_accessibility_abuse = False
         has_root_check = False
 
-        # Scan events for scoring indicators
+        
         for e in events:
             msg = e.get("message", "").lower()
             inds = e.get("indicators", {})
@@ -86,7 +86,7 @@ class ThreatScoreCalculator:
                 if any(k in msg for k in ["su", "root", "superuser"]):
                     has_root_check = True
 
-        # Calculate Network Score
+        
         if has_c2 or behaviors.get("C2_COMMUNICATION", {}).get("detected", False):
             net_raw += 55.0
             indicators_triggered += 1
@@ -99,7 +99,7 @@ class ThreatScoreCalculator:
             
         net_score = min(net_raw, 100.0)
 
-        # Calculate Filesystem Score
+        
         if has_persistence_file or behaviors.get("PERSISTENCE_ESTABLISHED", {}).get("detected", False):
             fs_raw += 45.0
             indicators_triggered += 1
@@ -112,7 +112,7 @@ class ThreatScoreCalculator:
             
         fs_score = min(fs_raw, 100.0)
 
-        # Calculate System Score
+        
         if has_sms_intercept or behaviors.get("SMS_INTERCEPTION", {}).get("detected", False):
             sys_raw += 50.0
             indicators_triggered += 1
@@ -128,8 +128,8 @@ class ThreatScoreCalculator:
             
         sys_score = min(sys_raw, 100.0)
 
-        # Dynamic layer weighting based on malware category
-        # Default weights: Network 35%, Filesystem 30%, System 35%
+        
+        
         weights = {"network": 0.35, "filesystem": 0.30, "system": 0.35}
 
         if category == "Ransomware":
@@ -149,7 +149,7 @@ class ThreatScoreCalculator:
             (sys_score * weights["system"])
         )
 
-        # Apply a base score floor for known malicious categories if any malicious behavior was detected
+        
         has_detected_behaviors = any(b.get("detected", False) for b in behaviors.values())
         if category != "Benign" and has_detected_behaviors:
             overall_score = max(overall_score, 45.0)

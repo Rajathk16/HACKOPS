@@ -32,7 +32,7 @@ function AIPanel() {
         </span>
       </div>
 
-      {/* Summary Text */}
+      {}
       <div style={{
         background: '#070f1c',
         border: '1px solid #1a3a5c',
@@ -51,7 +51,7 @@ function AIPanel() {
         </div>
       </div>
 
-      {/* Detection Stats */}
+      {}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
         {findings.map(f => (
           <div key={f.label} style={{
@@ -70,7 +70,7 @@ function AIPanel() {
         ))}
       </div>
 
-      {/* Recommendations */}
+      {}
       <div>
         <button
           onClick={() => setExpanded(!expanded)}

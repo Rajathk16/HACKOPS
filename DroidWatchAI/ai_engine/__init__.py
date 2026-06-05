@@ -30,7 +30,7 @@ def analyze_events(events: list[dict], asset_criticality: str = "MEDIUM", vulner
     Returns:
         dict: A comprehensive JSON-serializable threat report
     """
-    # 1. Instantiate the modules
+    
     threat_clf = ThreatClassifier()
     behavior_clf = BehaviorClassifier()
     severity_pred = SeverityPredictor()
@@ -40,33 +40,33 @@ def analyze_events(events: list[dict], asset_criticality: str = "MEDIUM", vulner
     explainer = AttackExplainer()
     mitig_gen = MitigationGenerator()
 
-    # 2. Run analysis pipeline
-    # 2.1 Behaviors
+    
+    
     behaviors = behavior_clf.predict(events)
     active_behaviors = [name for name, b_info in behaviors.items() if b_info["detected"]]
     
-    # 2.2 Threat Classification
+    
     threat_info = threat_clf.predict(events)
     category = threat_info["category"]
     confidence = threat_info["confidence"]
     probabilities = threat_info["probabilities"]
     
-    # 2.3 Severity
+    
     severity = severity_pred.predict(category, active_behaviors)
     
-    # 2.4 Threat Score
+    
     threat_score_info = score_calc.calculate(category, behaviors, events)
     threat_score = threat_score_info["overall_score"]
     
-    # 2.5 Risk Evaluation
+    
     risk_info = risk_eng.evaluate(threat_score, asset_criticality, vulnerability_rating)
     
-    # 2.6 Summaries and Explanations
+    
     ai_summary = summary_gen.generate(category, active_behaviors, severity)
     mitre_timeline = explainer.explain(events)
     mitigations = mitig_gen.generate(behaviors, events)
 
-    # 3. Compile report
+    
     return {
         "malware_category": category,
         "malware_confidence": confidence,

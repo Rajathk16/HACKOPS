@@ -1,4 +1,4 @@
-# OWNER: Rajath
+
 class MitigationGenerator:
     """
     Generates tailored, layer-specific active mitigations based on detected malware behaviors and events.
@@ -19,7 +19,7 @@ class MitigationGenerator:
         filesystem_mitigations = []
         system_mitigations = []
 
-        # Extract indicators to personalize mitigations
+        
         ips_to_block = set()
         domains_to_sinkhole = set()
         files_to_quarantine = set()
@@ -36,7 +36,7 @@ class MitigationGenerator:
             if "permissions" in inds:
                 permissions_to_revoke.update(inds["permissions"])
 
-        # 1. Network Layer Mitigations
+        
         if behaviors.get("C2_COMMUNICATION", {}).get("detected", False) or ips_to_block or domains_to_sinkhole:
             network_mitigations.append("🔒 Enable firewall isolation rules to restrict outward device communications.")
             
@@ -51,7 +51,7 @@ class MitigationGenerator:
         else:
             network_mitigations.append("✅ Monitor outgoing connection attempts for unusual UDP/TCP port binds.")
 
-        # 2. Filesystem / Storage Layer Mitigations
+        
         if behaviors.get("PAYLOAD_EXTRACTION", {}).get("detected", False) or files_to_quarantine:
             for filepath in sorted(list(files_to_quarantine))[:3]:
                 filename = filepath.split('/')[-1].split('\\')[-1]
@@ -67,7 +67,7 @@ class MitigationGenerator:
         if not filesystem_mitigations:
             filesystem_mitigations.append("✅ Standard storage sandbox isolation is active. No modifications detected.")
 
-        # 3. System Layer Mitigations
+        
         if behaviors.get("SMS_INTERCEPTION", {}).get("detected", False) or any("SMS" in p for p in permissions_to_revoke):
             system_mitigations.append("📱 Revoke SMS intercept permissions: android.permission.RECEIVE_SMS and android.permission.READ_SMS.")
             system_mitigations.append("💬 Audit runtime SMS broadcast receivers and restrict application notification monitoring.")
@@ -84,7 +84,7 @@ class MitigationGenerator:
             system_mitigations.append("🔏 Terminate background services to stop active reading of contacts and system logs.")
             system_mitigations.append("🛑 Revoke storage permissions to restrict access to local device folders.")
 
-        # Default system mitigations if empty
+        
         if not system_mitigations:
             system_mitigations.append("✅ Keep system APIs restricted. Force dynamic runtime user prompts for critical operations.")
 

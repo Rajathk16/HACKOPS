@@ -1,18 +1,19 @@
-# OWNER: Gahan
-# backend/api/threat.py
-# ─────────────────────────────────────────────────────────────
-# DroidWatch AI — Threat Data Endpoints
-# Owner: Gahan Shetty
-# GET /api/threats/<scan_id>        → all events for a scan
-# GET /api/threats/<scan_id>/summary → AI threat summary
-# GET /api/threats/demo             → returns sample_events (no sandbox needed)
-# ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
 
 import json
 import os
 from flask import Blueprint, jsonify
 from backend.utils.logger import get_logger
 from ai_engine import analyze_events
+from backend.database.db import get_events_by_scan
 
 threat_bp = Blueprint("threat", __name__)
 logger = get_logger("threat")
@@ -38,21 +39,20 @@ def get_demo_events():
 
 @threat_bp.route("/threats/<scan_id>", methods=["GET"])
 def get_threats(scan_id: str):
-    """
-    Returns all threat events for a scan_id.
-    TODO: Gahan — replace stub with real DB query once database layer is wired.
-    """
-    if scan_id == "demo":
-        return get_demo_events()
+    events = get_events_by_scan(scan_id)
+    if not events:
+        logger.info(f"Threat query for scan_id={scan_id} - No events found")
+        return jsonify({
+            "scan_id": scan_id,
+            "events": [],
+            "count": 0,
+            "message": "Scan in progress or not found"
+        }), 200
 
-    # Stub: return empty for now
-    # Replace with: events = db.get_events_by_scan(scan_id)
-    logger.info(f"Threat query for scan_id={scan_id}")
     return jsonify({
         "scan_id": scan_id,
-        "events": [],
-        "count": 0,
-        "message": "Scan in progress or not found"
+        "events": events,
+        "count": len(events)
     }), 200
 
 
@@ -68,9 +68,8 @@ def get_summary(scan_id: str):
         except FileNotFoundError:
             return jsonify({"error": "sample_events.json not found in shared/"}), 404
     else:
-        # Stub: replace with DB call when ready
-        events = []
-        
+        events = get_events_by_scan(scan_id)
+
     if not events:
         return jsonify({
             "scan_id": scan_id,
@@ -87,7 +86,7 @@ def get_summary(scan_id: str):
 
     report = analyze_events(events)
 
-    # Extract MITRE techniques from mitre_timeline
+    
     mitre_techniques = []
     if "mitre_timeline" in report:
         for item in report["mitre_timeline"]:

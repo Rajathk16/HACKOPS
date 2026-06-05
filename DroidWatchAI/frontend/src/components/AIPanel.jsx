@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 function AIPanel({ report }) {
   const [expanded, setExpanded] = useState(false);
 
-  // Fallbacks if report is null
+  
   const classification = report ? report.malware_type : 'UNKNOWN';
   const confidence = report && report.confidence ? (report.confidence * 100).toFixed(1) + '%' : 'N/A';
   const riskScore = report ? report.total_score : 0;
@@ -32,7 +32,7 @@ function AIPanel({ report }) {
         </span>
       </div>
 
-      {/* Summary Text */}
+      {}
       <div style={{
         background: '#070f1c',
         border: '1px solid #1a3a5c',
@@ -46,7 +46,7 @@ function AIPanel({ report }) {
         </div>
       </div>
 
-      {/* Detection Stats */}
+      {}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
         {findings.map(f => (
           <div key={f.label} style={{
@@ -65,7 +65,7 @@ function AIPanel({ report }) {
         ))}
       </div>
 
-      {/* Recommendations */}
+      {}
       <div>
         <button
           onClick={() => setExpanded(!expanded)}

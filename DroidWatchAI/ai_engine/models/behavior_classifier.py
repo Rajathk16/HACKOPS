@@ -1,4 +1,4 @@
-# OWNER: Rajath
+
 import re
 
 class BehaviorClassifier:
@@ -6,7 +6,7 @@ class BehaviorClassifier:
     Identifies specific malicious behaviors in Android dynamic events.
     """
     def __init__(self):
-        # Specific keywords and regex patterns for each behavior type
+        
         self.patterns = {
             "C2_COMMUNICATION": [
                 r'\bc2\b', r'callback', r'command\s+and\s+control',
@@ -67,14 +67,14 @@ class BehaviorClassifier:
                 matched = False
                 matched_reason = ""
                 
-                # Check regex patterns against raw message
+                
                 for pattern in patterns:
                     if re.search(pattern, message, re.IGNORECASE):
                         matched = True
                         matched_reason = "pattern_match"
                         break
                 
-                # Behavioral heuristic checks based on parsed indicators
+                
                 if behavior_name == "C2_COMMUNICATION":
                     if layer == "network" and ("ips" in indicators or "dns_query" in indicators):
                         matched = True
@@ -95,7 +95,7 @@ class BehaviorClassifier:
                         
                 elif behavior_name == "PAYLOAD_EXTRACTION":
                     if layer == "filesystem" and "file_paths" in indicators:
-                        # Check if file path ends with suspicious extension
+                        
                         for path in indicators["file_paths"]:
                             if any(ext in path.lower() for ext in [".bin", ".apk", ".dex", ".so", ".sh"]):
                                 matched = True
@@ -105,7 +105,7 @@ class BehaviorClassifier:
                 if matched:
                     evidence.append(message)
                     
-                    # Compute confidence contribution
+                    
                     increment = 0.25
                     if level == "CRITICAL":
                         increment = 0.50
@@ -119,17 +119,17 @@ class BehaviorClassifier:
                         
                     confidence_accumulator += increment
 
-            # Limit confidence between 0.0 and 1.0
+            
             confidence = min(round(confidence_accumulator, 2), 1.0)
             
-            # Ensure a minimal confidence if evidence is found
+            
             if evidence and confidence == 0.0:
                 confidence = 0.50
                 
             results[behavior_name] = {
                 "detected": len(evidence) > 0,
                 "confidence": confidence if len(evidence) > 0 else 0.0,
-                "evidence": list(set(evidence))  # Unique evidence lines
+                "evidence": list(set(evidence))  
             }
 
         return results

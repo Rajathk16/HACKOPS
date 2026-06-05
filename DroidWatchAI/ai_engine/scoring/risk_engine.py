@@ -1,10 +1,10 @@
-# OWNER: Rajath
+
 class RiskEngine:
     """
     Evaluates final Risk Score and Risk Level by merging Threat Score with contextual parameters.
     """
     def __init__(self):
-        # Criticality multipliers
+        
         self.criticality_multipliers = {
             "LOW": 0.7,
             "MEDIUM": 1.0,
@@ -12,7 +12,7 @@ class RiskEngine:
             "CRITICAL": 1.5
         }
         
-        # Vulnerability multipliers
+        
         self.vulnerability_multipliers = {
             "LOW": 0.8,
             "MEDIUM": 1.0,
@@ -34,11 +34,11 @@ class RiskEngine:
                 "asset_criticality": str
                 "vulnerability_rating": str
         """
-        # Clean inputs
+        
         criticality = str(asset_criticality).upper().strip()
         vulnerability = str(vulnerability_rating).upper().strip()
 
-        # Fallback to MEDIUM if invalid
+        
         if criticality not in self.criticality_multipliers:
             criticality = "MEDIUM"
         if vulnerability not in self.vulnerability_multipliers:
@@ -47,14 +47,14 @@ class RiskEngine:
         crit_mult = self.criticality_multipliers[criticality]
         vuln_mult = self.vulnerability_multipliers[vulnerability]
 
-        # Calculate raw risk score
+        
         risk_score_raw = threat_score * crit_mult * vuln_mult
         
-        # Cap risk score at 100.0
+        
         risk_score = min(risk_score_raw, 100.0)
         risk_score = max(risk_score, 0.0)
 
-        # Map score to risk level
+        
         if risk_score < 15.0:
             risk_level = "LOW"
         elif risk_score < 45.0:
@@ -64,7 +64,7 @@ class RiskEngine:
         else:
             risk_level = "CRITICAL"
 
-        # Special logic: if threat score is 0, risk score is 0
+        
         if threat_score == 0.0:
             risk_score = 0.0
             risk_level = "LOW"

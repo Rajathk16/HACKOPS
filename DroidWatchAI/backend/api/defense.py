@@ -1,11 +1,11 @@
-# OWNER: Gahan
-# backend/api/defense.py
-# ─────────────────────────────────────────────────────────────
-# DroidWatch AI — Defense Simulation Endpoints
-# Owner: Gahan Shetty
-# POST /api/defense/<scan_id>/trigger  → trigger a defense action
-# GET  /api/defense/<scan_id>/actions  → list triggered actions
-# ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
 
 from flask import Blueprint, request, jsonify
 from backend.utils.logger import get_logger
@@ -16,7 +16,7 @@ import uuid
 defense_bp = Blueprint("defense", __name__)
 logger = get_logger("defense")
 
-# In-memory store for demo (replace with DB later)
+
 _defense_log: list = []
 
 
@@ -88,9 +88,7 @@ def trigger_defense(scan_id: str):
     _defense_log.append(defense_event)
     logger.info(f"Defense triggered: {action} on {target} for scan {scan_id}")
 
-    # TODO: Gahan — emit via socketio so dashboard updates live
-    # socketio.emit(WSEvents.DEFENSE_TRIGGER, defense_event)
-
+    defense_bp.event_manager.emit_defense(scan_id, defense_event)
     return jsonify({"success": True, "defense_event": defense_event}), 200
 
 

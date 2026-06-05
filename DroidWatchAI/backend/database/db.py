@@ -1,5 +1,5 @@
-# OWNER: Gahan
-# backend/database/db.py
+
+
 import sqlite3
 import os
 
@@ -37,3 +37,43 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+
+def insert_scan(scan_id, apk_name):
+    conn = get_conn()
+    conn.execute("INSERT INTO scans (id, apk_name) VALUES (?, ?)", (scan_id, apk_name))
+    conn.commit()
+    conn.close()
+
+def update_scan_status(scan_id, status):
+    conn = get_conn()
+    conn.execute("UPDATE scans SET status = ? WHERE id = ?", (status, scan_id))
+    conn.commit()
+    conn.close()
+
+def insert_event(event_data):
+    conn = get_conn()
+    conn.execute("""
+        INSERT INTO events (
+            id, scan_id, layer, type, severity, description, details, raw, mitre_technique, timestamp
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        event_data.get("id"),
+        event_data.get("scan_id"),
+        event_data.get("layer"),
+        event_data.get("type"),
+        event_data.get("severity"),
+        event_data.get("description"),
+        str(event_data.get("details", "")),
+        str(event_data.get("raw", "")),
+        event_data.get("mitre_technique"),
+        event_data.get("timestamp")
+    ))
+    conn.commit()
+    conn.close()
+
+def get_events_by_scan(scan_id):
+    conn = get_conn()
+    cursor = conn.execute("SELECT * FROM events WHERE scan_id = ?", (scan_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]

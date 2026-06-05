@@ -1,12 +1,12 @@
-# OWNER: Gahan
-# sandbox/adb/logcat_reader.py
-# ─────────────────────────────────────────────────────────────
-# DroidWatch AI — Logcat Reader
-# Owner: Gahan Shetty
-#
-# Streams ADB logcat output and parses lines into ThreatEvents.
-# Calls EventManager to broadcast detections to the frontend.
-# ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
 
 import subprocess
 import threading
@@ -19,8 +19,8 @@ logger = get_logger("logcat_reader")
 
 ADB = "adb"
 
-# ── Signature Rules ───────────────────────────────────────────
-# Each rule: (regex_pattern, event_type, layer, severity, description_template)
+
+
 LOGCAT_RULES = [
     (
         r"connect\s+([\d\.]+):(\d+)",
@@ -95,7 +95,7 @@ class LogcatReader:
     def _stream_logcat(self, scan_id: str, package_filter: str | None):
         cmd = [ADB, "-s", self.device_id, "logcat", "-v", "time"]
         if package_filter:
-            # Filter to specific package + system logs
+            
             cmd += ["--pid", self._get_pid(package_filter)]
 
         try:
@@ -113,7 +113,7 @@ class LogcatReader:
         for pattern, event_type, layer, severity, desc_template in LOGCAT_RULES:
             match = re.search(pattern, line, re.IGNORECASE)
             if match:
-                # Build description with capture groups
+                
                 groups = match.groups()
                 description = desc_template
                 if len(groups) >= 2:
@@ -133,10 +133,10 @@ class LogcatReader:
                     type=event_type,
                     severity=severity,
                     description=description,
-                    raw=line[:300]  # cap raw log length
+                    raw=line[:300]  
                 )
                 self.event_manager.emit_threat(scan_id, event)
-                break  # one event per line
+                break  
 
     def _get_pid(self, package_name: str) -> str:
         try:

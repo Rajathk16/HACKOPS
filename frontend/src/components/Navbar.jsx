@@ -22,7 +22,7 @@ function Navbar() {
       zIndex: 100,
     }}>
 
-      {/* Left — Logo */}
+      {}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <div style={{
           width: '32px', height: '32px', borderRadius: '6px',
@@ -41,7 +41,7 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Center — Status Indicators */}
+      {}
       <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
         {[
           { label: 'SANDBOX', color: '#00e676', status: 'ACTIVE' },
@@ -63,7 +63,7 @@ function Navbar() {
         ))}
       </div>
 
-      {/* Right — Clock */}
+      {}
       <div style={{ textAlign: 'right' }}>
         <div className="font-mono" style={{ fontSize: '0.85rem', color: '#e8f4fd', letterSpacing: '0.05em' }}>
           {time.toLocaleTimeString('en-US', { hour12: false })}

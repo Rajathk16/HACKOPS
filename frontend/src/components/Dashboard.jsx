@@ -10,7 +10,7 @@ function Dashboard() {
   return (
     <div style={{ padding: '20px', maxWidth: '1600px', margin: '0 auto' }}>
 
-      {/* Top bar */}
+      {}
       <div style={{
         display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', marginBottom: '20px',
@@ -46,19 +46,19 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Grid Row 1 */}
+      {}
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px', marginBottom: '16px' }}>
         <AttackTimeline />
         <ThreatMeter />
       </div>
 
-      {/* Grid Row 2 */}
+      {}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
         <C2Graph />
         <LayerStatus />
       </div>
 
-      {/* Grid Row 3 */}
+      {}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <DefensePanel />
         <AIPanel />

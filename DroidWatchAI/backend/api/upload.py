@@ -1,10 +1,10 @@
-# OWNER: Gahan
-# backend/api/upload.py
-# ─────────────────────────────────────────────────────────────
-# DroidWatch AI — APK Upload Endpoint
-# Owner: Gahan Shetty
-# POST /api/upload  → receives APK, queues sandbox analysis
-# ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
 
 import os
 import uuid
@@ -39,7 +39,7 @@ def upload_apk():
     if not allowed_file(file.filename):
         return jsonify({"error": "Only .apk files are accepted"}), 400
 
-    # Save file with a unique scan ID
+    
     scan_id = str(uuid.uuid4())
     filename = secure_filename(file.filename)
     save_path = os.path.join(current_app.config["UPLOAD_FOLDER"], scan_id)
@@ -49,9 +49,7 @@ def upload_apk():
 
     logger.info(f"APK uploaded: {filename} → scan_id={scan_id}")
 
-    # TODO: Gahan — call orchestrator.start_scan(scan_id, apk_path) here
-    # For now, return the scan_id so frontend can subscribe to WS events
-
+    upload_bp.orchestrator.start_scan(scan_id, apk_path)
     return jsonify({
         "success": True,
         "scan_id": scan_id,

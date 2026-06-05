@@ -3,28 +3,28 @@ import sys
 import json
 import io
 
-# Set terminal encoding to UTF-8 for windows emoji support
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-# Adjust sys.path to find DroidWatchAI components relatively
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
-# Handle direct import inside DroidWatchAI
+
 dw_root = os.path.join(project_root, "DroidWatchAI")
 if os.path.exists(dw_root) and dw_root not in sys.path:
     sys.path.insert(0, dw_root)
 
-# Resolve package folder relatively
+
 try:
     from ai_engine import analyze_log_file
 except ImportError:
-    # If executing from outside, try adding grandparent
+    
     sys.path.insert(0, os.path.abspath(os.path.join(current_dir, "..")))
     from ai_engine import analyze_log_file
 
-# Define simulated log file contents
+
 SIMULATED_LOGS = """
 [2026-05-30T23:05:00] INFO: Device boot completed. System services initialized.
 [2026-05-30T23:05:05] WARNING: Application requested sensitive permissions: android.permission.RECEIVE_SMS, android.permission.READ_SMS.
@@ -37,17 +37,17 @@ SIMULATED_LOGS = """
 """
 
 def main():
-    # 1. Write simulated logs to file
+    
     log_file_path = os.path.join(current_dir, "simulated_spyware_logs.txt")
     with open(log_file_path, "w", encoding="utf-8") as f:
         f.write(SIMULATED_LOGS.strip())
     print(f"[*] Wrote simulated logs to: {log_file_path}")
 
-    # 2. Run analysis
+    
     print("[*] Running AI Threat Intelligence Engine...")
     report = analyze_log_file(log_file_path, asset_criticality="HIGH", vulnerability_rating="CRITICAL")
 
-    # 3. Print report beautifully
+    
     print("\n" + "="*60)
     print("                 DROIDWATCH AI REPORT SUMMARY")
     print("="*60)
@@ -87,7 +87,7 @@ def main():
         print(f"    {mit}")
     print("="*60)
 
-    # Clean up
+    
     if os.path.exists(log_file_path):
         os.remove(log_file_path)
 

@@ -3,12 +3,12 @@ import sys
 import unittest
 from datetime import datetime
 
-# Adjust sys.path to find DroidWatchAI components
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
-# Also insert DroidWatchAI root to handle relative imports from inside it
+
 dw_root = os.path.join(project_root, "DroidWatchAI")
 if dw_root not in sys.path:
     sys.path.insert(0, dw_root)
@@ -65,7 +65,7 @@ class TestModels(unittest.TestCase):
         self.assertGreater(results["SMS_INTERCEPTION"]["confidence"], 0.5)
 
     def test_threat_classifier(self):
-        # Build features representing Spyware profile
+        
         events = [
             {"message": "DNS request for suspect-domain.com", "layer": "network", "indicators": {"dns_query": "suspect-domain.com"}, "level": "WARNING"},
             {"message": "Permission granted: android.permission.RECEIVE_SMS", "layer": "system", "indicators": {"permissions": ["android.permission.RECEIVE_SMS"]}, "level": "INFO"},
@@ -79,11 +79,11 @@ class TestModels(unittest.TestCase):
 
     def test_severity_predictor(self):
         pred = SeverityPredictor()
-        # Spyware with multiple behaviors -> CRITICAL
+        
         sev = pred.predict("Spyware", ["C2_COMMUNICATION", "SMS_INTERCEPTION", "ACCESSIBILITY_ABUSE"])
         self.assertEqual(sev, "CRITICAL")
         
-        # Benign with 0 behaviors -> INFORMATIONAL
+        
         sev_benign = pred.predict("Benign", [])
         self.assertEqual(sev_benign, "INFORMATIONAL")
 
@@ -107,12 +107,12 @@ class TestScoring(unittest.TestCase):
 
     def test_risk_engine(self):
         engine = RiskEngine()
-        # High threat + high assets -> CRITICAL risk
+        
         res = engine.evaluate(threat_score=80.0, asset_criticality="HIGH", vulnerability_rating="HIGH")
         self.assertEqual(res["risk_level"], "CRITICAL")
         self.assertGreater(res["risk_score"], 80.0)
         
-        # Low threat -> LOW risk
+        
         res_low = engine.evaluate(threat_score=10.0, asset_criticality="LOW", vulnerability_rating="LOW")
         self.assertEqual(res_low["risk_level"], "LOW")
 
@@ -128,7 +128,7 @@ class TestE2EPipeline(unittest.TestCase):
         
         report = analyze_events(events, asset_criticality="HIGH", vulnerability_rating="MEDIUM")
         
-        # Validate output dictionary structure
+        
         self.assertEqual(report["malware_category"], "Spyware")
         self.assertIn("severity", report)
         self.assertIn("threat_score", report)

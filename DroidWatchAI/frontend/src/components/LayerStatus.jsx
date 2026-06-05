@@ -1,13 +1,13 @@
 import React from 'react';
 
 function LayerStatus({ report, eventsData }) {
-  // Helper to extract events count by layer
+  
   const getEventCount = (layerStr) => {
     if (!eventsData || !eventsData.events) return 0;
     return eventsData.events.filter(e => e.layer === layerStr).length;
   };
 
-  // Helper to extract attacks by checking behaviors
+  
   const getAttacks = (layerStr) => {
     if (!report || !report.detected_behaviors) return ['Monitoring...'];
     const b = report.detected_behaviors;

@@ -1,10 +1,10 @@
-# OWNER: Rajath
+
 class AISummaryGenerator:
     """
     Generates a natural language executive summary explaining threat analysis findings.
     """
     def __init__(self):
-        # Base templates for malware categories
+        
         self.category_summaries = {
             "Benign": (
                 "The application was executed in the dynamic sandbox and showed no signs of "
@@ -58,7 +58,7 @@ class AISummaryGenerator:
                 "as no signature or behavioral anomalies were detected."
             )
 
-        # Build list of readable behaviors
+        
         behavior_labels = [b.replace("_", " ").title() for b in behaviors]
         
         if behavior_labels:
@@ -71,7 +71,7 @@ class AISummaryGenerator:
         else:
             behavior_str = "suspicious background executions"
 
-        # Construct explanation based on severity
+        
         severity_explanations = {
             "INFORMATIONAL": "indicating negligible risk which does not require immediate action.",
             "LOW": "representing a minor security anomaly. Monitoring is recommended.",

@@ -1,4 +1,4 @@
-# OWNER: Rajath
+
 try:
     import numpy as np
     from sklearn.tree import DecisionTreeClassifier
@@ -6,40 +6,40 @@ try:
 except ImportError:
     HAS_SKLEARN = False
 
-# Severity levels mapping
+
 SEVERITY_LEVELS = ["INFORMATIONAL", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
 CATEGORIES_MAP = {"Benign": 0, "Adware": 1, "Trojan": 2, "Spyware": 3, "Ransomware": 4, "Worm": 5}
 
-# Training set: [category_index, num_behaviors, has_critical_behavior] -> severity_level
+
 TRAINING_DATA = [
-    # Benign
+    
     ([0, 0, 0], "INFORMATIONAL"),
     ([0, 1, 0], "LOW"),
     ([0, 2, 0], "MEDIUM"),
-    # Adware
+    
     ([1, 1, 0], "LOW"),
     ([1, 2, 0], "MEDIUM"),
     ([1, 3, 0], "MEDIUM"),
     ([1, 4, 1], "HIGH"),
-    # Trojan
+    
     ([2, 1, 0], "MEDIUM"),
     ([2, 2, 0], "HIGH"),
     ([2, 3, 0], "HIGH"),
     ([2, 4, 1], "CRITICAL"),
-    # Spyware
+    
     ([3, 1, 0], "HIGH"),
     ([3, 2, 0], "HIGH"),
     ([3, 3, 1], "CRITICAL"),
     ([3, 4, 1], "CRITICAL"),
-    # Ransomware
+    
     ([4, 1, 0], "HIGH"),
     ([4, 2, 1], "CRITICAL"),
     ([4, 3, 1], "CRITICAL"),
-    # Worm
+    
     ([5, 1, 0], "HIGH"),
     ([5, 2, 0], "CRITICAL"),
     ([5, 3, 1], "CRITICAL"),
-    # Critical flags overriding categories
+    
     ([0, 1, 1], "HIGH"),
     ([1, 2, 1], "HIGH"),
     ([2, 1, 1], "CRITICAL"),
@@ -78,13 +78,13 @@ class SeverityPredictor:
         """
         Predicts the severity level (INFORMATIONAL, LOW, MEDIUM, HIGH, CRITICAL).
         """
-        # Feature 1: Category encoding
+        
         cat_encoded = CATEGORIES_MAP.get(category, 0)
         
-        # Feature 2: Behavior Count
+        
         num_behaviors = len(detected_behaviors)
         
-        # Feature 3: Critical behavior presence
+        
         if critical_behaviors is None:
             critical_behaviors = ["PRIVILEGE_ESCALATION", "ACCESSIBILITY_ABUSE", "SMS_INTERCEPTION"]
             
@@ -96,7 +96,7 @@ class SeverityPredictor:
                 
         features = [cat_encoded, num_behaviors, has_critical]
         
-        # Fallback heuristic
+        
         heuristic_val = self._fallback_rule_based(features)
         
         if not self.is_trained:
@@ -106,7 +106,7 @@ class SeverityPredictor:
             features_arr = np.array([features])
             prediction = self.model.predict(features_arr)[0]
             
-            # Ensure prediction is a valid severity level
+            
             if prediction in SEVERITY_LEVELS:
                 return prediction
             return heuristic_val
@@ -120,23 +120,23 @@ class SeverityPredictor:
         cat_encoded, num_behaviors, has_critical = features
         
         if has_critical:
-            if cat_encoded >= 2:  # Trojan, Spyware, Ransomware, Worm
+            if cat_encoded >= 2:  
                 return "CRITICAL"
             return "HIGH"
             
-        if cat_encoded == 0:  # Benign
+        if cat_encoded == 0:  
             if num_behaviors == 0:
                 return "INFORMATIONAL"
             elif num_behaviors == 1:
                 return "LOW"
             return "MEDIUM"
             
-        if cat_encoded == 1:  # Adware
+        if cat_encoded == 1:  
             if num_behaviors <= 1:
                 return "LOW"
             return "MEDIUM"
             
-        if cat_encoded in [2, 3, 4, 5]:  # Malicious
+        if cat_encoded in [2, 3, 4, 5]:  
             if num_behaviors >= 3:
                 return "CRITICAL"
             if num_behaviors >= 2:

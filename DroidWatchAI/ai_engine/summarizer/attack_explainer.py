@@ -1,10 +1,10 @@
-# OWNER: Rajath
+
 class AttackExplainer:
     """
     Correlates runtime events to MITRE ATT&CK techniques and explains the attack phases chronologically.
     """
     def __init__(self):
-        # Mapping definitions: trigger keyword -> (Mitre ID, Technique Name, Tactical Phase, Explanation Template)
+        
         self.mitre_mappings = [
             ("accessibility", (
                 "T1546.015", 
@@ -105,10 +105,10 @@ class AttackExplainer:
             message = event.get("message", "")
             timestamp = event.get("timestamp", "")
             
-            # Match against MITRE definitions
+            
             for keyword, (mitre_id, tech_name, phase, explanation_tmpl) in self.mitre_mappings:
                 if keyword in message.lower():
-                    # Deduplicate repeating techniques on the timeline unless they are different messages
+                    
                     tech_key = (mitre_id, message)
                     if tech_key not in seen_techniques:
                         seen_techniques.add(tech_key)
@@ -121,10 +121,10 @@ class AttackExplainer:
                             "explanation": explanation_tmpl,
                             "log_evidence": message
                         })
-                        # Stop matching other keywords for this specific event to prevent duplicates
+                        
                         break
                         
-        # Sort chronologically by timestamp
+        
         try:
             timeline.sort(key=lambda x: x["timestamp"])
         except Exception:
